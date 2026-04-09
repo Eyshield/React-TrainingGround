@@ -19,7 +19,10 @@ function LoginForm() {
     handleLogin(form);
   };
   return (
-    <form onSubmit={handleSubmit}>
+    <form
+      className="flex justify-center items-center flex-col"
+      onSubmit={handleSubmit}
+    >
       <h2>Login</h2>
       <input
         type="email"
