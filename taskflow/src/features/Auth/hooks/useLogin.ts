@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { login } from "../AuthService";
+import { login } from "../services/AuthService";
 import type { AuthResponse } from "../../../entities/AuthResponse";
 import type { User } from "../../../entities/User";
 

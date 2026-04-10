@@ -1,7 +1,7 @@
 import { useState } from "react";
 import type { AuthResponse } from "../../../entities/AuthResponse";
 import type { User } from "../../../entities/User";
-import { register } from "../AuthService";
+import { register } from "../services/AuthService";
 
 export const useRegister = () => {
   const [data, setData] = useState<AuthResponse | null>(null);
