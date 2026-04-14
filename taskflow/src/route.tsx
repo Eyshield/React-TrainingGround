@@ -1,8 +1,9 @@
-import LoginForm from "./features/Auth/components/LoginForm";
+import AuthPage from "./features/Auth/AuthPage";
+
 import { createBrowserRouter } from "react-router-dom";
 export const route = createBrowserRouter([
   {
     path: "/",
-    element: <LoginForm />,
+    element: <AuthPage />,
   },
 ]);
