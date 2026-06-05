@@ -1,5 +1,5 @@
-import type { AuthResponse } from "../../entities/AuthResponse";
-import type { User } from "../../entities/User";
+import type { AuthResponse } from "../../../entities/AuthResponse";
+import type { User } from "../../../entities/User";
 
 export const login = async (user: User): Promise<AuthResponse> => {
   try {
