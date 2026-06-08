@@ -54,8 +54,8 @@ export const addUser = async (user: User): Promise<UserResponse> => {
 };
 
 export const updateUser = async (
-  user: User,
   id: string,
+  user: User,
 ): Promise<UserResponse> => {
   try {
     const response = await fetch(`http://localhost:9000/api/user/${id}`, {
