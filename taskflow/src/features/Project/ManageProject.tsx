@@ -1,18 +1,18 @@
 import NavBar from "../../shared/components/NavBar";
-import SearchForm from "./components/SearchForm";
-import TableUser from "./components/TableUser";
+import TableProject from "./components/TableProject";
+import SearchProject from "./components/SearchProject";
 
-function ManageUsers() {
+function ManageProject() {
   return (
     <main className="flex w-screen h-screen">
       <NavBar />
       <section className="flex flex-col  w-full h-screen">
-        <SearchForm />
+        <SearchProject />
 
-        <TableUser />
+        <TableProject />
       </section>
     </main>
   );
 }
 
-export default ManageUsers;
+export default ManageProject;

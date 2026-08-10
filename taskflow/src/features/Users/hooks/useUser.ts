@@ -88,21 +88,21 @@ export const useSearchUser = () => {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   //useCallBack was used here to avoid infnite refresh
-  const handleSearchUser = useCallback(
-    async (size: number, page: number, name: string) => {
-      setLoading(true);
-      setError(null);
-      try {
-        const response = await searchUser(size, page, name);
-        setData(response);
-      } catch (err: unknown) {
-        setError(err instanceof Error ? err.message : "Unknown Error");
-      } finally {
-        setLoading(false);
+  const handleSearchUser = useCallback(async (name: string) => {
+    setLoading(true);
+    setError(null);
+    try {
+      if (!name.trim()) {
+        return setData(null);
       }
-    },
-    [],
-  );
+      const response = await searchUser(name);
+      setData(response);
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : "Unknown Error");
+    } finally {
+      setLoading(false);
+    }
+  }, []);
 
   return { data, error, loading, handleSearchUser };
 };
@@ -118,6 +118,7 @@ export const useGetUserById = () => {
     try {
       const response = await getUserById(id);
       setData(response);
+      return response;
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : "Unknown Error");
     } finally {

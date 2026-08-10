@@ -1,24 +1,22 @@
 import { useEffect, useState } from "react";
-import { useDeleteUser, useGetAllUsers } from "../hooks/useUser";
-import AddUser from "./AddUser";
-import EditUser from "./EditUser";
+import { useDeleteProject, useGetAllPorjects } from "../hooks/useProject";
+import AddProject from "./AddProject";
 
-function TableUser() {
-  const [showAddUser, setShowAddUser] = useState(false);
-  const [showEditUser, setShowEditUser] = useState(false);
-  const[id,setId]=useState("");
-  const { data, error, loading, handleGetAllUsers } = useGetAllUsers();
+function TableProject() {
+  const [showAddProject, setShowAddProject] = useState(false);
+
+  const { data, error, loading, handleGetAllProjects } = useGetAllPorjects();
 
   const {
     success: deletingSuccess,
     error: deletingError,
     loading: deletingLoading,
-    handleDeleteUser,
-  } = useDeleteUser();
+    handleDeleteProject,
+  } = useDeleteProject();
 
   useEffect(() => {
-    handleGetAllUsers(0, 10);
-  }, [handleGetAllUsers]);
+    handleGetAllProjects(0, 10);
+  }, [handleGetAllProjects]);
 
   useEffect(() => {
     if (deletingSuccess && data) {
@@ -26,9 +24,9 @@ function TableUser() {
       const isLastItemOnPage = data.content.length === 1;
       const targetPage =
         isLastItemOnPage && currentPage > 0 ? currentPage - 1 : currentPage;
-      handleGetAllUsers(targetPage, 10);
+      handleGetAllProjects(targetPage, 10);
     }
-  }, [deletingSuccess, data, handleGetAllUsers]);
+  }, [deletingSuccess, data, handleGetAllProjects]);
 
   if (loading) {
     return (
@@ -55,13 +53,13 @@ function TableUser() {
       )}
       {deletingSuccess && (
         <div className="mb-4 px-4 py-2.5 rounded-lg bg-green-50 border border-green-200 text-sm text-green-600">
-          Utilisateur supprimé avec succès.
+          Projet supprimé avec succès.
         </div>
       )}
       <div className="flex items-center justify-between mb-5">
-        <h2 className="text-sm font-medium text-gray-700">Utilisateurs</h2>
+        <h2 className="text-sm font-medium text-gray-700">Projets</h2>
         <button
-          onClick={() => setShowAddUser(true)}
+          onClick={() => setShowAddProject(true)}
           className="inline-flex items-center gap-1.5 px-3.5 py-2 text-sm font-medium rounded-lg
                      bg-indigo-600 text-white hover:bg-indigo-700 transition-colors shadow-sm"
         >
@@ -70,24 +68,16 @@ function TableUser() {
         </button>
       </div>
 
-      {showAddUser && (
-        <AddUser
-          onClose={() => setShowAddUser(false)}
-          onSuccess={() => handleGetAllUsers(data?.page ?? 0, 10)}
+      {showAddProject && (
+        <AddProject
+          onClose={() => setShowAddProject(false)}
+          onSuccess={() => handleGetAllProjects(data?.page ?? 0, 10)}
         />
       )}
-      {showEditUser && (
-        <EditUser
-          onClose={() => setShowEditUser(false)}
-          onSuccess={() => handleGetAllUsers(data?.page ?? 0, 10)}
-          id={id}
-        />
-      )}
+
       {!data || data.content.length === 0 ? (
         <div className="flex justify-center items-center h-40 rounded-xl border border-gray-100 bg-gray-50">
-          <span className="text-sm text-gray-400">
-            Aucun utilisateur trouvé
-          </span>
+          <span className="text-sm text-gray-400">Aucun projet trouvé</span>
         </div>
       ) : (
         <>
@@ -96,50 +86,51 @@ function TableUser() {
             <table className="w-full text-sm">
               <thead>
                 <tr className="bg-gray-50 border-b border-gray-100">
-                  {["ID", "Username", "Email", "Rôle", "Actions"].map((h) => (
-                    <th
-                      key={h}
-                      className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wide"
-                    >
-                      {h}
-                    </th>
-                  ))}
+                  {["ID", "Name", "Creator name", "Created at", "Actions"].map(
+                    (h) => (
+                      <th
+                        key={h}
+                        className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wide"
+                      >
+                        {h}
+                      </th>
+                    ),
+                  )}
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-50">
-                {data.content.map((userResponse) => (
+                {data.content.map((projectResponse) => (
                   <tr
-                    key={userResponse.id}
+                    key={projectResponse.id}
                     className="bg-white hover:bg-gray-50/70 transition-colors"
                   >
                     <td className="px-4 py-3 text-gray-400 font-mono text-xs">
-                      #{userResponse.id}
+                      #{projectResponse.id}
                     </td>
                     <td className="px-4 py-3 font-medium text-gray-800">
-                      {userResponse.username}
+                      {projectResponse.name}
                     </td>
                     <td className="px-4 py-3 text-gray-500">
-                      {userResponse.email}
+                      {projectResponse.creatorName}
                     </td>
-                    <td className="px-4 py-3">
-                      <span className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium bg-indigo-50 text-indigo-600 border border-indigo-100">
-                        {userResponse.role}
-                      </span>
+                    <td className="px-4 py-3 text-gray-500">
+                      {projectResponse.created_At.toLocaleDateString()}
                     </td>
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-2">
                         <button
-                          onClick={() => {
-                            setShowEditUser(true);
-                            setId(String(userResponse.id));
-                          }}
+                          onClick={() =>
+                            console.log("edit", projectResponse.id)
+                          }
                           className="px-3 py-1.5 text-xs font-medium rounded-lg border border-gray-200
                                      text-gray-600 hover:bg-gray-50 hover:border-gray-300 transition-colors"
                         >
                           Éditer
                         </button>
                         <button
-                          onClick={() => handleDeleteUser(userResponse.id!)}
+                          onClick={() =>
+                            handleDeleteProject(projectResponse.id!)
+                          }
                           disabled={deletingLoading}
                           className="px-3 py-1.5 text-xs font-medium rounded-lg border border-red-100
                                      text-red-500 hover:bg-red-50 hover:border-red-200 transition-colors
@@ -159,7 +150,7 @@ function TableUser() {
           <div className="flex items-center justify-between mt-4 px-1">
             <button
               disabled={data.isFirst}
-              onClick={() => handleGetAllUsers(data.page - 1, 10)}
+              onClick={() => handleGetAllProjects(data.page - 1, 10)}
               className="inline-flex items-center gap-1 px-3 py-1.5 text-sm font-medium rounded-lg
                          border border-gray-200 text-gray-600 hover:bg-gray-50 transition-colors
                          disabled:opacity-40 disabled:cursor-not-allowed"
@@ -178,7 +169,7 @@ function TableUser() {
 
             <button
               disabled={data.isLast}
-              onClick={() => handleGetAllUsers(data.page + 1, 10)}
+              onClick={() => handleGetAllProjects(data.page + 1, 10)}
               className="inline-flex items-center gap-1 px-3 py-1.5 text-sm font-medium rounded-lg
                          border border-gray-200 text-gray-600 hover:bg-gray-50 transition-colors
                          disabled:opacity-40 disabled:cursor-not-allowed"
@@ -192,4 +183,4 @@ function TableUser() {
   );
 }
 
-export default TableUser;
+export default TableProject;

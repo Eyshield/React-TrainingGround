@@ -1,14 +1,14 @@
 import type { PageResponse } from "../../../entities/PageResponse";
 import type { User } from "../../../entities/User";
 import type { UserResponse } from "../../../entities/UserResponse";
-
+const apiUrl = import.meta.env.VITE_API_URL;
 export const getAllUsers = async (
   page: number,
   size: number,
 ): Promise<PageResponse<User>> => {
   try {
     const response = await fetch(
-      `http://localhost:9000/api/user/all?page=${page}&size=${size}`,
+      `${apiUrl}user/all?page=${page}&size=${size}`,
       {
         method: "GET",
       },
@@ -31,7 +31,7 @@ export const getAllUsers = async (
 
 export const addUser = async (user: User): Promise<UserResponse> => {
   try {
-    const response = await fetch(`http://localhost:9000/api/user/add`, {
+    const response = await fetch(`${apiUrl}user/add`, {
       method: "POST",
       headers: {
         "content-type": "Application/Json",
@@ -58,7 +58,7 @@ export const updateUser = async (
   user: User,
 ): Promise<UserResponse> => {
   try {
-    const response = await fetch(`http://localhost:9000/api/user/${id}`, {
+    const response = await fetch(`${apiUrl}user/${id}`, {
       method: "PUT",
       headers: {
         "content-type": "Application/Json",
@@ -82,7 +82,7 @@ export const updateUser = async (
 
 export const getUserById = async (id: string): Promise<UserResponse> => {
   try {
-    const response = await fetch(`http://localhost:9000/api/user/${id}`, {
+    const response = await fetch(`${apiUrl}user/${id}`, {
       method: "GET",
     });
     if (!response.ok) {
@@ -101,7 +101,7 @@ export const getUserById = async (id: string): Promise<UserResponse> => {
 };
 export const deleteUser = async (id: string): Promise<void> => {
   try {
-    const response = await fetch(`http://localhost:9000/api/user/${id}`, {
+    const response = await fetch(`${apiUrl}user/${id}`, {
       method: "DELETE",
     });
 
@@ -121,17 +121,12 @@ export const deleteUser = async (id: string): Promise<void> => {
   }
 };
 export const searchUser = async (
-  size: number,
-  page: number,
   name: string,
 ): Promise<PageResponse<UserResponse>> => {
   try {
-    const response = await fetch(
-      `http://localhost:9000/api/user/search?name=${name}&page=${page}&size=${size}`,
-      {
-        method: "GET",
-      },
-    );
+    const response = await fetch(`${apiUrl}user/search?name=${name}`, {
+      method: "GET",
+    });
     if (!response.ok) {
       const errorData = await response.json().catch(() => null);
       throw new Error(errorData?.message || "Failed to search user");
