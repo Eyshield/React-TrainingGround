@@ -1,9 +1,9 @@
 import type { AuthResponse } from "../../../entities/AuthResponse";
 import type { User } from "../../../entities/User";
-
+const apiUrl = import.meta.env.VITE_API_URL;
 export const login = async (user: User): Promise<AuthResponse> => {
   try {
-    const response = await fetch("http://localhost:9000/api/auth/login", {
+    const response = await fetch(`${apiUrl}auth/login`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -32,7 +32,7 @@ export const login = async (user: User): Promise<AuthResponse> => {
 };
 export const register = async (user: User): Promise<AuthResponse> => {
   try {
-    const response = await fetch("http://localhost:9000/api/auth/register", {
+    const response = await fetch(`${apiUrl}auth/register`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
