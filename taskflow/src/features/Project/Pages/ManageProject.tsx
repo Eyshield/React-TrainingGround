@@ -1,6 +1,6 @@
-import NavBar from "../../shared/components/NavBar";
-import TableProject from "./components/TableProject";
-import SearchProject from "./components/SearchProject";
+import NavBar from "../../../shared/components/NavBar";
+import TableProject from "../components/TableProject";
+import SearchProject from "../components/SearchProject";
 
 function ManageProject() {
   return (
