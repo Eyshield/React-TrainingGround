@@ -1,60 +1,65 @@
 import { useEffect, useState } from "react";
 import { useSearchUser } from "../hooks/useUser";
+import type { UserResponse } from "../../../entities/UserResponse";
 
-function SearchForm() {
+interface SearchUserProps {
+  onSelect?: (user: UserResponse) => void;
+}
+
+function SearchForm({ onSelect }: SearchUserProps) {
   const { data, error, loading, handleSearchUser } = useSearchUser();
   const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
-    if (searchTerm.trim() === "") {
-      handleSearchUser("");
-    }
-    handleSearchUser(searchTerm);
-  }, [handleSearchUser, searchTerm]);
+    const term = searchTerm.trim();
+
+    const timeout = setTimeout(() => {
+      handleSearchUser(term);
+    }, 400);
+
+    return () => clearTimeout(timeout);
+  }, [searchTerm, handleSearchUser]);
 
   return (
-    <section className="h-fit flex flex-col items-center p-6">
-      <div className="w-full max-w-xl">
-        <div className="flex items-center gap-2">
-          <input
-            type="text"
-            placeholder="Search users..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full border border-gray-200 rounded-xl px-4 py-3 
-                       focus:outline-none focus:ring-2 focus:ring-blue-500
-                       transition"
-          />
-        </div>
-        <div className="mt-4">
-          {loading && (
-            <p className="text-sm text-gray-500 animate-pulse">Searching...</p>
-          )}
+    <div className="w-full">
+      <input
+        type="text"
+        placeholder="Rechercher un utilisateur..."
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+        className="w-full border border-gray-200 rounded-lg px-3.5 py-2.5
+                   text-sm bg-gray-50
+                   focus:outline-none focus:border-indigo-400
+                   focus:ring-2 focus:ring-indigo-100 transition"
+      />
 
-          {error && <p className="text-sm text-red-500">{error}</p>}
+      {loading && (
+        <p className="mt-2 text-xs text-gray-500 animate-pulse">Recherche...</p>
+      )}
 
-          {!loading && !error && searchTerm && data?.content.length === 0 && (
-            <p className="text-sm text-gray-500">No users found</p>
-          )}
-        </div>
+      {error && <p className="mt-2 text-xs text-red-500">{error}</p>}
+
+      {!loading && !error && searchTerm && data?.content.length === 0 && (
+        <p className="mt-2 text-xs text-gray-500">Aucun utilisateur trouvé.</p>
+      )}
+
+      <div className="mt-2 border border-gray-200 rounded-lg overflow-hidden">
+        {data?.content.map((user) => (
+          <button
+            type="button"
+            key={user.id}
+            onClick={() => onSelect?.(user)}
+            className="w-full text-left px-4 py-3
+                         hover:bg-gray-50 transition
+                         border-b last:border-b-0"
+          >
+            <p className="text-sm font-medium text-gray-800">{user.username}</p>
+
+            <p className="text-xs text-gray-500">{user.email}</p>
+          </button>
+        ))}
       </div>
-      <div className="w-full max-w-xl mt-6">
-        <ul className="space-y-3">
-          {data?.content.map((user) => (
-            <li
-              key={user.id}
-              className="bg-white shadow-sm hover:shadow-md transition
-                         rounded-xl p-4 flex justify-between items-center"
-            >
-              <div>
-                <p className="font-semibold text-gray-800">{user.username}</p>
-                <p className="text-sm text-gray-500">{user.email}</p>
-              </div>
-            </li>
-          ))}
-        </ul>
-      </div>
-    </section>
+    </div>
   );
 }
 
