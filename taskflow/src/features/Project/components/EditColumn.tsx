@@ -13,7 +13,7 @@ interface FormData {
   id?: string;
   title: string;
   position: string;
-  projectId?: string;
+  projectId: string;
 }
 
 const INITIAL_FORM: FormData = {
@@ -105,10 +105,12 @@ function EditColumn({ onClose, onSuccess, projectId, id }: EditColumnProps) {
 
   useEffect(() => {
     if (columnData) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setForm({
         id: columnData.id,
         title: columnData.title,
         position: columnData.position,
+        projectId: projectId,
       });
     }
   }, [columnData]);
