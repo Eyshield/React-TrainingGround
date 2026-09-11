@@ -3,5 +3,5 @@ export interface TaskResponse {
   title: string;
   description: string;
   priority: string;
-  usename: string;
+  username: string;
 }
