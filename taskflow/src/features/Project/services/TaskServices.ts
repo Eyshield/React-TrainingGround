@@ -72,3 +72,22 @@ export const deleteTask = async (id: string): Promise<void> => {
     throw new Error("Unknown error while deleting task");
   }
 };
+export const getTaskById = async (id: string): Promise<TaskResponse> => {
+  try {
+    const response = await fetch(`${apiUrl}task/${id}`, {
+      method: "GET",
+    });
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => null);
+      throw new Error(errorData?.message || "Failed to fetch task");
+    }
+    const data: TaskResponse = await response.json();
+    return data;
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      console.error("getTaskById error:", error.message);
+      throw error;
+    }
+    throw new Error("Unknown error while fetching task");
+  }
+};
