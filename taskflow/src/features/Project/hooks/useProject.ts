@@ -19,6 +19,7 @@ export const useAddProject = () => {
     setLoading(true);
     setError(null);
     try {
+      console.log("Adding project with request:", projectRequest);
       const response = await addProject(projectRequest);
       setData(response);
       setLoading(false);

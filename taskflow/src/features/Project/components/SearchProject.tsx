@@ -1,17 +1,17 @@
 import { useEffect, useState } from "react";
+import type { ProjectResponse } from "../../../entities/ProjectResponse";
 import { useSearchPorjects } from "../hooks/useProject";
 
-function SearchProject() {
+interface SearchUserProps {
+  onSelect?: (user: ProjectResponse) => void;
+}
+
+function SearchProject({ onSelect }: SearchUserProps) {
   const { data, error, loading, handleSearchProject } = useSearchPorjects();
   const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
     const term = searchTerm.trim();
-
-    if (!term) {
-      handleSearchProject("");
-      return;
-    }
 
     const timeout = setTimeout(() => {
       handleSearchProject(term);
@@ -19,50 +19,54 @@ function SearchProject() {
 
     return () => clearTimeout(timeout);
   }, [searchTerm, handleSearchProject]);
+
   return (
-    <section className="h-fit flex flex-col items-center p-6">
-      <div className="w-full max-w-xl">
-        <div className="flex items-center gap-2">
-          <input
-            type="text"
-            placeholder="Search projects..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full border border-gray-200 rounded-xl px-4 py-3 
-                       focus:outline-none focus:ring-2 focus:ring-blue-500
-                       transition"
-          />
-        </div>
-        <div className="mt-4">
-          {loading && (
-            <p className="text-sm text-gray-500 animate-pulse">Searching...</p>
-          )}
+    <section className="w-full flex items-center justify-center pt-4 ">
+      <div className="w-full max-w-md">
+        <input
+          type="text"
+          placeholder="Rechercher un projet..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="w-full border border-gray-200 rounded-lg px-3.5 py-2.5
+                   text-sm bg-gray-50
+                   focus:outline-none focus:border-indigo-400
+                   focus:ring-2 focus:ring-indigo-100 transition"
+        />
 
-          {error && <p className="text-sm text-red-500">{error}</p>}
+        {loading && (
+          <p className="mt-2 text-xs text-gray-500 animate-pulse">
+            Recherche...
+          </p>
+        )}
 
-          {!loading && !error && searchTerm && data?.content.length === 0 && (
-            <p className="text-sm text-gray-500">No Projects found</p>
-          )}
-        </div>
-      </div>
-      <div className="w-full max-w-xl mt-6">
-        <ul className="space-y-3">
+        {error && <p className="mt-2 text-xs text-red-500">{error}</p>}
+
+        {!loading && !error && searchTerm && data?.content.length === 0 && (
+          <p className="mt-2 text-xs text-gray-500">Aucun Projet trouvé.</p>
+        )}
+
+        <div className="mt-2 border-transparent rounded-lg overflow-hidden">
           {data?.content.map((project) => (
-            <li
+            <button
+              type="button"
               key={project.id}
-              className="bg-white shadow-sm hover:shadow-md transition
-                         rounded-xl p-4 flex justify-between items-center"
+              onClick={() => {
+                setSearchTerm(project.name ?? "");
+                onSelect?.(project);
+              }}
+              className="w-full text-left px-4 py-3
+                         hover:bg-gray-50 transition
+                         border-b last:border-b-0"
             >
-              <div>
-                <p className="font-semibold text-gray-800">{project.name}</p>
-                <p className="text-sm text-gray-500">{project.creatorName}</p>
-              </div>
-            </li>
+              <p className="text-sm font-medium text-gray-800">
+                {project.name}
+              </p>
+            </button>
           ))}
-        </ul>
+        </div>
       </div>
     </section>
   );
 }
-
 export default SearchProject;

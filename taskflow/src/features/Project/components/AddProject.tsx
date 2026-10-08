@@ -1,7 +1,6 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useAddProject } from "../hooks/useProject";
-import { useSearchUser } from "../../Users/hooks/useUser";
-import type { UserResponse } from "../../../entities/UserResponse";
+import SearchForm from "../../Users/components/SearchForm";
 
 interface AddProjectProps {
   onSuccess?: () => void;
@@ -20,14 +19,6 @@ const INITIAL_FORM: FormData = {
 };
 function AddProject({ onClose, onSuccess }: AddProjectProps) {
   const {
-    data: usersData,
-    error: userError,
-    loading: userLoading,
-    handleSearchUser,
-  } = useSearchUser();
-  const [searchTerm, setSearchTerm] = useState("");
-
-  const {
     handleAddProject,
     loading: addLoading,
     error: addError,
@@ -36,11 +27,6 @@ function AddProject({ onClose, onSuccess }: AddProjectProps) {
   const [success, setSuccess] = useState("");
 
   const isSubmitting = addLoading;
-
-  useEffect(() => {
-    if (searchTerm.trim() === "") return;
-    handleSearchUser(searchTerm);
-  }, [searchTerm, handleSearchUser]);
 
   function handleChange(
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
@@ -52,7 +38,7 @@ function AddProject({ onClose, onSuccess }: AddProjectProps) {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setSuccess("");
-
+    console.log("Submitting form:", form);
     await handleAddProject(form);
     setForm(INITIAL_FORM);
     setSuccess("Projet créé");
@@ -94,44 +80,11 @@ function AddProject({ onClose, onSuccess }: AddProjectProps) {
             className="w-full px-3.5 py-2.5 text-sm rounded-lg border border-gray-200 bg-gray-50 placeholder:text-gray-400 text-gray-800 outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 transition-all"
           />
 
-          <input
-            name="searchTerm"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            placeholder="Search users"
-            className="w-full px-3.5 py-2.5 text-sm rounded-lg border border-gray-200 bg-gray-50 placeholder:text-gray-400 text-gray-800 outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 transition-all"
+          <SearchForm
+            onSelect={(user) =>
+              setForm((p) => ({ ...p, userId: String(user.id) }))
+            }
           />
-
-          {userLoading && (
-            <p className="text-sm text-gray-500 animate-pulse">Searching...</p>
-          )}
-
-          {userError && <p className="text-sm text-red-500">{userError}</p>}
-
-          {!userLoading &&
-            !userError &&
-            searchTerm &&
-            usersData?.content.length === 0 && (
-              <p className="text-sm text-gray-500">No users found</p>
-            )}
-        </div>
-
-        <div className="w-full max-w-xl mt-6">
-          <ul className="space-y-3">
-            {usersData?.content.map((user: UserResponse) => (
-              <li
-                key={user.id}
-                onClick={() =>
-                  setForm((p) => ({ ...p, userId: String(user.id) }))
-                }
-                className="bg-white shadow-sm hover:shadow-md transition rounded-xl p-4 flex justify-between items-center"
-              >
-                <div>
-                  <p className="font-semibold text-gray-800">{user.username}</p>
-                </div>
-              </li>
-            ))}
-          </ul>
         </div>
 
         {addError && (

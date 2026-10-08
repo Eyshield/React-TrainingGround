@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { Shield, Plus, Pencil, MoreVertical } from "lucide-react";
 import { useGetProjectById } from "../hooks/useProject";
 

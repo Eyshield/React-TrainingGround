@@ -114,7 +114,9 @@ function TableProject() {
                       {projectResponse.creatorName}
                     </td>
                     <td className="px-4 py-3 text-gray-500">
-                      {projectResponse.created_At.toLocaleDateString()}
+                      {new Date(
+                        projectResponse.created_At,
+                      ).toLocaleDateString()}
                     </td>
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-2">
