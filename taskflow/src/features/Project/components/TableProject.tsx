@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useDeleteProject, useGetAllPorjects } from "../hooks/useProject";
 import AddProject from "./AddProject";
+import { NavLink } from "react-router-dom";
 
 function TableProject() {
   const [showAddProject, setShowAddProject] = useState(false);
@@ -129,6 +130,13 @@ function TableProject() {
                         >
                           Éditer
                         </button>
+                        <NavLink
+                          to={`/projects/${projectResponse.id}`}
+                          className="px-3 py-1.5 text-xs font-medium rounded-lg border border-gray-200
+                                     text-gray-600 hover:bg-gray-50 hover:border-gray-300 transition-colors"
+                        >
+                          view
+                        </NavLink>
                         <button
                           onClick={() =>
                             handleDeleteProject(projectResponse.id!)
