@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { Shield, Plus, Pencil, MoreVertical } from "lucide-react";
+import { Shield, Plus, Pencil } from "lucide-react";
 import { useGetProjectById } from "../hooks/useProject";
 
 function ProjectDetailsHeader({ id }: { id: string }) {
@@ -76,14 +76,6 @@ function ProjectDetailsHeader({ id }: { id: string }) {
           >
             <Pencil className="w-4 h-4" />
             Edit Project
-          </button>
-
-          <button
-            type="button"
-            aria-label="More options"
-            className="border border-slate-200 hover:bg-slate-50 text-slate-700 p-2 rounded-lg transition-colors"
-          >
-            <MoreVertical className="w-4 h-4" />
           </button>
         </div>
       </div>
